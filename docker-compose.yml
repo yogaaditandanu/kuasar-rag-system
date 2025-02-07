@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  rag-api:
+    build:
+      context: .
+    volumes:
+      - ./src:/app
+    working_dir: /app
+    command: uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    depends_on:
+      - vectorstore
+
+  vectorstore:
+    image: chromadb/chroma
+    volumes:
+      - ./data/chroma_db:/chroma_db
+    ports:
+      - "8001:8000"
